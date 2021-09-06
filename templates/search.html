@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Results: {{userid}}</h2>
+<a href="content">Home</a>
+
+{% for post in posts %}
+<div>
+  <p>{{post.description}}</p>
+  <p><img src="{{post.image.url}}" /></p>
+</div>
+{% endfor %} {% endblock %}

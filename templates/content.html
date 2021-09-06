@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Welcome {{user.username}}</h2>
+<p><a href="logout">Logout</a></p>
+<h4>Search for other user's articles</h4>
+<form action="search">
+  Enter username: <input type="text" name="searchbox" />
+  <input type="submit" />
+</form>
+<br />
+
+<h4>Create Article</h4>
+<form action="create" method="POST" enctype="multipart/form-data">
+  {% csrf_token %} {{form.as_p}}
+  <p>Enter description:</p>
+  <input type="text" name="description" />
+  <p>Upload image:</p>
+  <input type="file" name="image" accept="image/*" />
+  <p>Public article:</p>
+  <input type="checkbox" name="public" checked /><br />
+  <p>Please do not leave empty fields</p>
+  <br /><button type="submit">Submit</button>
+</form>
+
+{% for post in posts %}
+<div>
+  <p>{{post.description}}</p>
+  <p><img src="{{post.image.url}}" /></p>
+</div>
+{% endfor %} {% endblock %}
