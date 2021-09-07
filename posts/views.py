@@ -4,8 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from .models import Post
-
-# Create your views here.
+from random import randint
 
 
 def login(request):
@@ -26,12 +25,23 @@ def login(request):
         return render(request, 'login.html')
 
 
+sum = 0
+
+
 def register(request):
+
     if request.method == 'POST':
         username = request.POST['username']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
         captcha = request.POST['captcha']
+        global sum
+        # print('Yes' if captcha == sum else 'No')
+        if captcha != str(sum):
+            messages.error(request, 'Invalid captcha')
+            # print(captcha, sum)
+            # print('Oh no')
+            return redirect('register')
 
         if password1 == password2:
             if User.objects.filter(username=username).exists():
@@ -47,22 +57,22 @@ def register(request):
                 messages.error(
                     request, 'Password must be atleast 8 characters long')
                 return redirect('register')
-            elif captcha != '5':
-                messages.error(request, 'Invalid captcha')
-                return redirect('register')
+
             else:
                 user = User.objects.create_user(
                     username=username, password=password1)
                 user.save()
+                return redirect('/')
 
         else:
             messages.error(request, 'Passwords not matching')
             return redirect('register')
 
-        return redirect('/')
-
-    else:
-        return render(request, 'register.html')
+    num1 = randint(1, 100)
+    num2 = randint(1, 100)
+    sum = str(num1 + num2)
+    # print(sum)
+    return render(request, 'register.html', {'num1': num1, 'num2': num2})
 
 
 def content(request):
